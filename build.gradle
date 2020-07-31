@@ -1,0 +1,114 @@
+/*
+    buildscript代码块中的声明是gradle脚本自身需要的资源。
+    可以声明的资源包括依赖项、第三方插件、maven仓库地址等。
+    gradle在执行脚本时，会优先执行buildscript代码块中的内容，然后才会执行剩余的build脚本。
+    该部分代码应该置顶
+*/
+buildscript {
+    ext {
+        springBootVersion = '2.3.2.RELEASE'
+    }
+    repositories {
+        maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
+        maven { url 'https://maven.aliyun.com/repository/gradle-plugin'}
+        mavenCentral()
+        mavenCentral()
+    }
+    dependencies {
+        /* 添加插件依赖路径（通过jar方式） */
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+plugins {
+//    id 'org.springframework.boot' version '2.3.2.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+    id 'java'
+    id 'idea'
+}
+
+group = 'com.kevin.springboot'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+configurations {
+    developmentOnly
+    runtimeClasspath {
+        extendsFrom developmentOnly
+    }
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+// 所有模块/项目的通用配置
+//allProjects {
+//    task hello  { task -> println "I'm $task.project.name" }
+//
+//    group = 'com.kevin.springboot'
+//    version = '0.0.1-SNAPSHOT'
+//    sourceCompatibility = '1.8'
+//    apply plugin: 'idea'
+//    apply plugin: 'java'
+//    /* java编译的时候缺省状态下会因为中文字符而失败 */
+//    [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
+//    /**
+//     * 导入了springboot,spring cloud的pom文件，能够免去自己管理版本
+//     * PS: 在Spring官网指导上面有另外一种配置，那种配置需要配置main class，一会说明
+//     */
+//    dependencyManagement {
+//        imports {
+//            mavenBom "org.springframework.boot:spring-boot-starter-parent:${bootVersion}"
+//            mavenBom 'org.projectlombok:lombok:1.18.8'
+//        }
+//    }
+//}
+
+// 子模块/项目的统一配置
+subprojects{
+    apply plugin: 'idea' /* 同上  让Gradle自动生成Intellij的项目文件*/
+    apply plugin: 'java'
+    /* 注意gradle插件不再自动应用，所以这里需要指定 */
+    apply plugin: 'org.springframework.boot'
+    /* 依赖管理插件仍然是一个spring-boot-gradle-plugin传递依赖，所以无需在build.gradle配置中明确列出此依赖。 */
+    apply plugin: 'io.spring.dependency-management' /* 依赖管理，用来传递spring的依赖 */
+    // 指定JDK版本
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+    // 指定编码格式
+    [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
+    repositories {
+        maven { url 'https://maven.aliyun.com/repository/public/' }
+        maven { url 'https://maven.aliyun.com/repository/gradle-plugin'}
+        maven {url 'https://maven.aliyun.com/repository/spring/'}
+        mavenLocal()
+        mavenCentral()
+    }
+    ext {//依赖版本
+        springBootVersion = "2.3.2.RELEASE"
+        lombokVersion = "1.18.8"
+    }
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-actuator'
+        runtime("org.springframework.boot:spring-boot-devtools")
+        testImplementation('org.springframework.boot:spring-boot-starter-test') {
+            exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+        }
+        compileOnly("org.projectlombok:lombok:${lombokVersion}")
+        annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
+        testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
+        testCompileOnly ("org.projectlombok:lombok:${lombokVersion}")
+    }
+}
+repositories {
+    maven { url 'https://maven.aliyun.com/repository/public/' }
+    maven { url 'https://maven.aliyun.com/repository/gradle-plugin'}
+    maven {url 'https://maven.aliyun.com/repository/spring/'}
+    mavenLocal()
+    mavenCentral()
+    mavenLocal()
+    mavenCentral()
+}
+test {
+    useJUnitPlatform()
+}

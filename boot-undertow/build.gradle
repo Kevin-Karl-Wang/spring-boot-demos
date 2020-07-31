@@ -1,0 +1,20 @@
+plugins {
+    id 'java'
+    id 'io.spring.dependency-management'
+}
+
+group 'com.kevin.springboot'
+version '0.0.1-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+//repositories {
+//    mavenCentral()
+//}
+
+dependencies {
+    implementation("org.springframework.boot:spring-boot-starter-web") {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+    }
+    implementation("org.springframework.boot:spring-boot-starter-undertow")
+}
