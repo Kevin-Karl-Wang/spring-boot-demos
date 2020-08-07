@@ -1,0 +1,27 @@
+@Api的使用
+API作用在Controller,作为swagger文档资源,该注解将一个controller标注为一个Swagger资源(API). 在默认情况下，Swagger-Core 只会扫描解析具有 @Api 注解的类，而会自动忽略其他类别资源（JAX-RS endpoints、Servlets 等）的注解。
+@ApiOperation 的使用
+ApiOperation 定义在方法上，描述方法名、方法解释、返回信息、标记等信息。
+
+@ApiImplicitParams 和 @ApiImplicitParam 的使用
+@ApiImplicitParams 用于描述方法的返回信息，和 @ApiImplicitParam 注解配合使用；
+@ApiImplicitParam 用来描述具体某一个参数的信息，包括参数的名称、类型、限制等信息。
+
+属性名称	备注
+value	url 的路径值
+tags	如果设置这个值，value 的值会被覆盖
+description	　对 API 资源的描述
+produces	　For example, "application/json, application/xml"
+consumes	For example, "application/json, application/xml"
+protocols	Possible values: http, https, ws, wss
+authorizations	高级特性认证时配置
+hidden	配置为 true 将在文档中隐藏
+response	返回的对象
+responseContainer	这些对象是有效的 "List", "Set" or "Map"，其他无效
+httpMethod	"GET"、"HEAD"、"POST"、"PUT"、"DELETE"、"OPTIONS" and "PATCH"
+code	http 的状态码 默认 200
+extensions	扩展属性
+
+
+
+http://localhost:8000/swagger-ui.html
